@@ -27,7 +27,4 @@ RUN chown -R www-data:www-data /var/www/html
 # Expose port 80 for the web server
 EXPOSE 80
 
-node_modules
-vendor
-.git
-.env
+
