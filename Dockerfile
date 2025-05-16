@@ -11,6 +11,13 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Copy your Laravel app into the container
+# COPY . .
+
+# Install dependencies
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+
 # Set working directory
 WORKDIR /var/www/html
 
