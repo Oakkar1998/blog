@@ -41,7 +41,8 @@ Route::middleware('auth')->group(function () {
         Route::get('categoryPage',[CreatorStudioController::class,'categoryPage'])->name('creator.categoryPage');
         Route::post('createArticle',[CreatorStudioController::class,'create'])->name('article.create');
         Route::post('createCategory',[CreatorStudioController::class,'createCategory'])->name('creator.createCategory');
-        Route::post('editCategory/{cateId}',[CreatorStudioController::class,'editCategory'])->name('creator.editCategory');
+        Route::post('/editCategory/{cateId}', [CreatorStudioController::class, 'editCategory'])->name('creator.editCategory');
+
         Route::delete('deleteCategory/{categoryId}',[CreatorStudioController::class,'deleteCategory'])->name('creator.deleteCategory');
     });
     

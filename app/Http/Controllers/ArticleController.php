@@ -258,6 +258,16 @@ class ArticleController extends Controller
         // Generate PDF
         $pdf = Pdf::loadView('pdf.article', ['article' => $article]);
         
+         // ✅ Notify blogger
+            $bloggers = User::where('role', 'blogger')->get();
+            $actor = auth()->user();
+            foreach ($bloggers as $blogger) {
+
+                $blogger->notify(new ArticlePublishedNotification($pdfArticle, 'downloaded',$actor));
+                
+                
+            }
+
         
 
         

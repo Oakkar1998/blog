@@ -37,15 +37,29 @@
 
                 <hr>
 
-                <div class="d-flex justify-content-between text-muted">
-                    <div>
-                        <i class="bi bi-eye"></i> 1.2k Views
-                        <i class="bi bi-chat-dots ms-3"></i> 35 Comments
+                <div class="card-footer">
+
+                        <div class="d-flex justify-content-between text-muted">
+                            <div>
+                               
+
+
+                                <i class="bi bi-eye"></i> {{ $article->views }} Views
+                                <small><i class="bi bi-chat-dots ms-3"></i> {{ $article->comments_count }} Comments</small>
+                            </div>
+                            <div>
+                                <small>
+                                    <i class="bi bi-heart-fill text-danger"></i>
+                                    @if (!empty($article->love) && $article->love > 0)
+                                        {{ $article->love }}
+                                    @endif
+                                </small>
+                                
+
+                            </div>
+                        </div>
+
                     </div>
-                    <div>
-                        <i class="bi bi-heart-fill text-danger"></i> 87 Loves
-                    </div>
-                </div>
             </div>
         </div>
     </div>
