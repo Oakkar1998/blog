@@ -7,46 +7,43 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+
 Route::get('/', [HomeController::class, 'home'])->name('home');
+
+
+
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
+});
+
  
-
-
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
 
     //Profile
     Route::get('profilePage',[ProfileController::class,'profilePage'])->name('profile.Page');
 
     //Creator Studio
-    Route::get('creatorStudioPage',[CreatorStudioController::class,'creatorStudioPage'])->name('profile.creatorStudioPage');
-    Route::get('articlePage',[CreatorStudioController::class,'articlePage'])->name('creator.articlePage');
-    Route::get('createArticlePage',[CreatorStudioController::class,'createArticlePage'])->name('creator.createArticlePage');
-    Route::get('editArticlePage/{id}',[CreatorStudioController::class,'editArticlePage'])->name('creator.editArticlePage');
-    Route::post('editArticle/{id}',[CreatorStudioController::class,'editArticle'])->name('creator.editArticle');
-    Route::get('viewArticlePage/{id}',[CreatorStudioController::class,'viewArticlePage'])->name('creator.viewArticlePage');
-    Route::post('uploadCreatorImage',[CreatorStudioController::class,'uploadCreatorImage'])->name('creator.uploadCreatorImage');
-
-
-    Route::get('categoryPage',[CreatorStudioController::class,'categoryPage'])->name('creator.categoryPage');
-    Route::post('createArticle',[CreatorStudioController::class,'create'])->name('article.create');
-    Route::post('createCategory',[CreatorStudioController::class,'createCategory'])->name('creator.createCategory');
-    Route::post('editCategory/{cateId}',[CreatorStudioController::class,'editCategory'])->name('creator.editCategory');
-    Route::delete('deleteCategory/{categoryId}',[CreatorStudioController::class,'deleteCategory'])->name('creator.deleteCategory');
-
-    
+    Route::prefix('blogger')->middleware(['auth', 'blogger'])->group(function () {
+        Route::get('creatorStudioPage',[CreatorStudioController::class,'creatorStudioPage'])->name('profile.creatorStudioPage');
+        Route::get('articlePage',[CreatorStudioController::class,'articlePage'])->name('creator.articlePage');
+        Route::get('createArticlePage',[CreatorStudioController::class,'createArticlePage'])->name('creator.createArticlePage');
+        Route::get('editArticlePage/{id}',[CreatorStudioController::class,'editArticlePage'])->name('creator.editArticlePage');
+        Route::post('editArticle/{id}',[CreatorStudioController::class,'editArticle'])->name('creator.editArticle');
+        Route::get('viewArticlePage/{id}',[CreatorStudioController::class,'viewArticlePage'])->name('creator.viewArticlePage');
+        Route::post('uploadCreatorImage',[CreatorStudioController::class,'uploadCreatorImage'])->name('creator.uploadCreatorImage');
+        Route::get('categoryPage',[CreatorStudioController::class,'categoryPage'])->name('creator.categoryPage');
+        Route::post('createArticle',[CreatorStudioController::class,'create'])->name('article.create');
+        Route::post('createCategory',[CreatorStudioController::class,'createCategory'])->name('creator.createCategory');
+        Route::post('editCategory/{cateId}',[CreatorStudioController::class,'editCategory'])->name('creator.editCategory');
+        Route::delete('deleteCategory/{categoryId}',[CreatorStudioController::class,'deleteCategory'])->name('creator.deleteCategory');
+    });
     
     //Article management
     Route::get('readArticlePage/{articleId}',[ArticleController::class,'readArticlePage'])->name('article.readArticlePage');

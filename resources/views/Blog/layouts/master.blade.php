@@ -239,7 +239,7 @@
                                 @endforeach
 
 
-                                @if ($notifications->count() >= 10)
+                                @if (count($notifications) >= 10)
                                     <hr>
                                     <li class="text-center mt-2">
                                         <button id="showAllNoti" class="btn btn-outline-dark">
@@ -247,6 +247,7 @@
                                         </button>
                                     </li>
                                 @endif
+
 
 
                             </ul>
@@ -266,10 +267,12 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="{{ route('profile.Page') }}">Profile</a>
                                     </li>
-                                    <li><a class="dropdown-item"
+                                    @if(Auth::user()->role == 'blogger')
+                                        <li><a class="dropdown-item"
                                             href="{{ route('profile.creatorStudioPage') }}">Creator
                                             Studio</a></li>
                                     <li>
+                                    @endif
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li class="d-flex justify-content-center">
@@ -519,19 +522,33 @@
     <!-- Template Javascript -->
     <script src="{{ asset('BlogTem/js/main.js') }}"></script>
 
-    {{-- Current Date --}}
-    <script>
-        const options = {
-            weekday: 'long',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-        };
-        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', options);
-    </script>
 
-    {{-- for noti --}}
+
+
+
+
     <script>
+        function updateDateTime() {
+            const options = {
+                weekday: 'long',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true // optional: shows AM/PM
+            };
+
+            document.getElementById('current-date').textContent = new Date().toLocaleString('en-US', options);
+        }
+
+        // Initial call
+        updateDateTime();
+
+        // Update every second
+        setInterval(updateDateTime, 1000);
+
         document.addEventListener("DOMContentLoaded", function() {
             const bell = document.getElementById("notiBell");
             const badge = document.getElementById("notiBadge");
@@ -560,11 +577,9 @@
                 }).then(() => location.reload());
             });
         });
-    </script>
 
-    
+        //all notification
 
-    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const btn = document.getElementById('showAllNoti');
             if (btn) {
@@ -579,7 +594,7 @@
             }
         });
 
-        //all noti
+
         document.addEventListener('DOMContentLoaded', function() {
             const btn = document.getElementById('showAllNoti');
             if (btn) {

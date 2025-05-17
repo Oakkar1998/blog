@@ -4,46 +4,64 @@
 
 <form action="{{ route('home') }}" method="GET">
     <div class="container">
-        <div class="my-3 d-flex justify-content-center">
-            <input type="text" name="search" value="{{ request('search') }}" class="form-control w-auto"
-                placeholder="Article Name...">
-            <button class="btn btn-outline-dark mx-2" type="submit">
-                Search
-            </button>
+    {{-- Search Bar --}}
+    <div class="my-3 row justify-content-center gx-2">
+        <div class="col-12 col-md-6">
+            <div class="input-group">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control"
+                    placeholder="Article Name...">
+                <button class="btn btn-outline-dark" type="submit">
+                    Search
+                </button>
+            </div>
         </div>
     </div>
-    <div class="container mt-5 d-flex justify-content-evenly">
-        {{-- Sort Order --}}
-        <select class="form-select w-auto" name="order" onchange="this.form.submit()">
-            <option value="latest" {{ request('order')=='latest' ? 'selected' : '' }}>Latest</option>
-            <option value="oldest" {{ request('order')=='oldest' ? 'selected' : '' }}>Oldest</option>
-        </select>
+</div>
 
-        {{-- Category Filter --}}
-        <select class="form-select w-auto" name="category" onchange="this.form.submit()">
-            <option value="">All Categories</option>
-            @foreach ($categories as $category)
-            <option value="{{ $category->id }}" {{ request('category')==$category->id ? 'selected' : '' }}>
-                {{ $category->name }}
-            </option>
-            @endforeach
-        </select>
 
-        {{-- Author Filter --}}
-        <select class="form-select w-auto" name="author" onchange="this.form.submit()">
-            <option value="">All Authors</option>
-            @foreach ($authors as $author)
-            <option value="{{ $author->author }}" {{ request('author')==$author->author ? 'selected' : '' }}>
-                {{ $author->author }}
-            </option>
-            @endforeach
-        </select>
+    {{-- Filters --}}
+    <div class="container mt-4">
+        <div class="row gy-2 justify-content-center">
+            {{-- Sort Order --}}
+            <div class="col-12 col-md-auto">
+                <select class="form-select" name="order" onchange="this.form.submit()">
+                    <option value="latest" {{ request('order')=='latest' ? 'selected' : '' }}>Latest</option>
+                    <option value="oldest" {{ request('order')=='oldest' ? 'selected' : '' }}>Oldest</option>
+                </select>
+            </div>
 
-        <div class="">
-            <a href="{{route('home')}}" class="btn btn-danger">reset</a>
+            {{-- Category Filter --}}
+            <div class="col-12 col-md-auto">
+                <select class="form-select" name="category" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category')==$category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Author Filter --}}
+            <div class="col-12 col-md-auto">
+                <select class="form-select" name="author" onchange="this.form.submit()">
+                    <option value="">All Authors</option>
+                    @foreach ($authors as $author)
+                        <option value="{{ $author->author }}" {{ request('author')==$author->author ? 'selected' : '' }}>
+                            {{ $author->author }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Reset Button --}}
+            <div class="col-12 col-md-auto">
+                <a href="{{ route('home') }}" class="btn btn-danger w-100">Reset</a>
+            </div>
         </div>
     </div>
 </form>
+
 
 
 

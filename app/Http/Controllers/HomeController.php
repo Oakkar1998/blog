@@ -13,6 +13,9 @@ class HomeController extends Controller
     public function home(Request $request){
         // $articles = Article::orderBy('created_at','desc')->paginate(3);
         // dd($articles->toArray());
+
+        
+
         $query = Article::query();
 
         // Search by title 
@@ -46,12 +49,6 @@ class HomeController extends Controller
         // Get categories and authors for dropdowns
         $categories = Category::all();
         $authors = Article::select('author')->distinct()->orderBy('author')->get();
-
-        
-
-
-
-
 
         return view('welcome',compact('articles','categories','authors'));
     }  
