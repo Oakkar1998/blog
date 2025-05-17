@@ -22,6 +22,7 @@ class Article extends Model
         'content',
         'image',
         'status',
+        'download_count'
         
     ];
 
@@ -72,5 +73,9 @@ class Article extends Model
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+        public function downloads()
+    {
+        return $this->hasMany(Download::class);
     }
 }

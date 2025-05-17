@@ -10,13 +10,14 @@ use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Category;
 
-use Barryvdh\DomPDF\Facade\Pdf; // <-- Correct import
+use App\Models\Download;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Notifications\ArticlePublishedNotification;
+use Barryvdh\DomPDF\Facade\Pdf; // <-- Correct import
 
 
 
@@ -241,10 +242,8 @@ class ArticleController extends Controller
             public function downloadPDF($id)
     {
         $pdfArticle = Article::with('category')->findOrFail($id);
-        // $convertedBody = Rabbit::zg2uni($pdfArticle->content); // Convert Zawgyi to Unicode
-        // $unicodeText = Converter::zg2uni($pdfArticle->content);
-
-        $article = [
+        
+        $articleData = [
             'title'    => $pdfArticle->title,
             'author'   => $pdfArticle->author ?? 'Unknown',
             'date'     => $pdfArticle->created_at->format('F j, Y'),
@@ -255,26 +254,33 @@ class ArticleController extends Controller
             'category' => optional($pdfArticle->category)->name ?? 'Uncategorized',
         ];
 
-        // Generate PDF
-        $pdf = Pdf::loadView('pdf.article', ['article' => $article]);
-        
-         // ✅ Notify blogger
+        $userId = auth()->id();
+
+        // Only record first-time download
+        if ($userId && !Download::where('user_id', $userId)->where('article_id', $pdfArticle->id)->exists()) {
+            // Save only one record per user/article
+            Download::create([
+                'user_id' => $userId,
+                'article_id' => $pdfArticle->id,
+            ]);
+
+            // Count this as one unique download
+            $pdfArticle->increment('download_count');
+
+            // Notify bloggers
             $bloggers = User::where('role', 'blogger')->get();
             $actor = auth()->user();
+
             foreach ($bloggers as $blogger) {
-
-                $blogger->notify(new ArticlePublishedNotification($pdfArticle, 'downloaded',$actor));
-                
-                
+                $blogger->notify(new ArticlePublishedNotification($pdfArticle, 'downloaded', $actor));
             }
+        }
 
-        
-
-        
+        $pdf = Pdf::loadView('pdf.article', ['article' => $articleData]);
         return $pdf->download('article.pdf');
-        
-
     }
+
+
 
 
 
