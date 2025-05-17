@@ -115,9 +115,11 @@
                                 <img src="{{ asset('BlogTem/img/features-fashion.jpg') }}"
                                     class="img-fluid rounded-circle border border-3 border-primary me-2"
                                     style="width: 30px; height: 30px;" alt="">
-                                <a href="#">
+                                <a>
+                                    {{-- dynamic text! --}}
                                     <p class="text-white mb-0 link-hover">
                                         မျိုးစေ့ကို မစိုက်ပျိုးဘဲ အသီးအပွင့်ကို မရရှိနိုင်။
+                                        I am come back.
                                     </p>
                                 </a>
                             </div>
@@ -134,7 +136,7 @@
         <div class="container-fluid bg-light">
             <div class="container px-0">
                 <nav class="navbar navbar-light navbar-expand-xl">
-                    <a href="index.html" class="navbar-brand mt-3">
+                    <a href="{{ route('home') }}" class="navbar-brand mt-3">
 
 
                         <p class="text-primary display-6 mb-2" style="line-height: 5px;">Future</p>
@@ -267,13 +269,17 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="{{ route('profile.Page') }}">Profile</a>
                                     </li>
-                                    @if(Auth::user()->role == 'blogger')
-                                        <li><a class="dropdown-item"
-                                            href="{{ route('profile.creatorStudioPage') }}">Creator
-                                            Studio</a></li>
-                                    <li>
-                                    @endif
-                                        <hr class="dropdown-divider">
+                                    @auth
+                                        @if (Auth::user()->role == 'blogger')
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('profile.creatorStudioPage') }}">
+                                                    Creator Studio
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endauth
+
+                                    <hr class="dropdown-divider">
                                     </li>
                                     <li class="d-flex justify-content-center">
                                         <form method="POST" action="{{ route('logout') }}">
@@ -506,10 +512,7 @@
     <!-- Copyright End -->
 
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-primary border-2 border-white rounded-circle back-to-top"><i
-            class="fa fa-arrow-up"></i></a>
-
+    
 
     <!-- JavaScript Libraries -->
 

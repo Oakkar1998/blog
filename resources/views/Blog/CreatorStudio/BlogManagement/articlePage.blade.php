@@ -33,11 +33,11 @@
                         <td class="align-middle">{{ $article->author }}</td>
                         <td class="align-middle">
                             <div class="d-flex flex-column gap-1 text-muted small">
-                                <span><strong>Viewed:</strong> {{ $article->views ?? 0 }}</span>
-                                <span><strong>Loved:</strong> {{ $article->love ?? 0 }}</span>
-                                <span><strong>saved:</strong> {{ $article->save ?? 0 }}</span>
-                                <span><strong>Commented:</strong> {{ $article->comments_count ?? 0 }}</span>
-                                <span><strong>Downloaded:</strong> {{ $article->downloads_count ?? 0 }}</span>
+                                <span><strong>Viewed:</strong> {{ ($article->views ?? 0) > 99 ? '99+' : ($article->views ?? 0) }}</span>
+                                <span><strong>Loved:</strong> {{ ($article->love ?? 0) > 99 ? '99+' : ($article->love ?? 0) }}</span>
+                                <span><strong>saved:</strong> {{ ($article->save ?? 0) > 99 ? '99+' : ($article->save ?? 0) }}</span>
+                                <span><strong>Commented:</strong> {{ ($article->comments_count ?? 0) > 99 ? '99+' : ($article->comments_count ?? 0) }}</span>
+                                <span><strong>Downloaded:</strong> {{ ($article->download_count ?? 0) > 99 ? '99+' : ($article->download_count ?? 0) }}</span>
                             </div>
                         </td>
 

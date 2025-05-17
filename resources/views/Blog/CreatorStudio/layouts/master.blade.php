@@ -141,7 +141,7 @@
                             User Management</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu">
                             <li>
-                                <a href="#">Users</a>
+                                <a href="{{ route('profile.allusersPage') }}">All Users</a>
                             </li>
                             <li>
                                 <a href="#">Page 2</a>
@@ -175,8 +175,8 @@
 
         <!-- Page Content  -->
         <div id="content" class="p-4 p-md-5">
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('home') }}" class="btn btn-sm btn-dark">Back to Blog</a>
+            <div class="d-flex justify-content-start mb-3">
+                <a href="{{ route('home') }}" class="btn btn-md btn-dark">Back to Blog</a>
             </div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">

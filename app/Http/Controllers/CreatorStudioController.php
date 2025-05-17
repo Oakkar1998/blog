@@ -13,12 +13,12 @@ use App\Notifications\ArticlePublishedNotification;
 
 class CreatorStudioController extends Controller
 {
-    public function creatorStudioPage()
+    public function creatorStudioPage() 
     {
         $creator_id = Auth::user()->id;
         $creator = User::find($creator_id);
         
-        return view('Blog.CreatorStudio.layouts.master',compact('creator'));
+        return view('Blog.CreatorStudio.BlogManagement.creatorStudioPage',compact('creator'));
     }
 
     public function articlePage()
@@ -36,11 +36,11 @@ class CreatorStudioController extends Controller
     public function create(Request $request)
 {
     $request->validate([
-        'title' => 'required|min:2|max:100',
+        'title' => 'required|min:2|max:100|unique:articles,title',
         'author' => 'required|min:1|max:30',
         'category_id' => 'required',
         'content' => 'required|max:10000',
-        'image' => 'required|image|max:2048'
+        'image' => 'nullable|file|max:2048|mimes:jpg,jpeg,webp',
     ]);
 
     $data = $request->only(['title', 'author', 'content', 'category_id']);
@@ -82,7 +82,7 @@ class CreatorStudioController extends Controller
             'author' => 'required|min:1|max:30',
             'category_id' => 'required|exists:categories,id',
             'content' => 'required|max:10000',
-            'image' => 'nullable|image|max:2048'
+            'image' => 'nullable|file|max:2048|mimes:jpg,jpeg,webp',
         ]);
 
         // Find the article
@@ -152,7 +152,13 @@ class CreatorStudioController extends Controller
     public function editCategory(Request $request, $cateId)
     {
         $category = Category::findOrFail($cateId);
+
+        $data = $request->validate([
+            'category_name' => 'required|min:2|max:30|string|unique:categories,name,' . $cateId,
+        ]);
+
         $category->name = $request->category_name;
+
         $category->save();
 
         return redirect()->back()->with('success', 'Category updated successfully!');
@@ -183,4 +189,31 @@ class CreatorStudioController extends Controller
 
         return redirect()->back()->with('success', 'photo updated.');
     }
+
+    //all users page
+    public function allusersPage(){
+
+        $all_users = User::where('role','reader')->paginate(10);
+        return view('Blog.CreatorStudio.UserManagement.allUsersPage',compact('all_users'));
+    }
+
+    //deleteUser
+        public function deleteUser(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        // Optional: prevent deleting currently logged-in user
+        // if (auth()->id() == $user->id) {
+        //     return redirect()->back()->with('error', 'You cannot delete your own account.');
+        // }
+
+        $user->delete();
+
+        return redirect()->back()->with('success', 'User deleted successfully.');
+    }
+
 }

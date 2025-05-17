@@ -43,7 +43,7 @@ class HomeController extends Controller
         
 
 
-        $articles = $query->withCount('views')->paginate(3);
+        $articles = $query->withCount('views')->paginate(9);
 
 
         // Get categories and authors for dropdowns
