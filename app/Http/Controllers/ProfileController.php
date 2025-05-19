@@ -69,5 +69,12 @@ class ProfileController extends Controller
         return view('Blog.Profile.profielPage',compact('user','notes'));
     }
 
+    public function aboutPage(){
+        
+        $notes = Note::first();
+
+        return view('aboutPage',compact('notes'));
+    }
+
     
 }

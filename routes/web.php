@@ -29,6 +29,9 @@ Route::middleware('auth')->group(function () {
     //Profile
     Route::get('profilePage',[ProfileController::class,'profilePage'])->name('profile.Page');
 
+    //About 
+    Route::get('aboutPage',[ProfileController::class,'aboutPage'])->name('profile.aboutPage');
+
     //Creator Studio
     Route::prefix('blogger')->middleware(['auth', 'blogger'])->group(function () {
         Route::get('creatorStudioPage',[CreatorStudioController::class,'creatorStudioPage'])->name('profile.creatorStudioPage');

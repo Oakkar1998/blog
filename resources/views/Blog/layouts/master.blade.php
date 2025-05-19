@@ -159,11 +159,11 @@
                     <div class="collapse navbar-collapse bg-light py-3" id="navbarCollapse">
                         <div class="navbar-nav mx-auto border-top">
                             <a href="{{ route('home') }}" class="nav-item nav-link active">Home</a>
-                            <a href="index.html" class="nav-item nav-link ">Categories</a>
+                            {{-- <a href="index.html" class="nav-item nav-link ">Categories</a> --}}
 
 
 
-                            <a href="contact.html" class="nav-item nav-link">About</a>
+                            <a href="{{ route('profile.aboutPage') }}" class="nav-item nav-link">About</a>
                         </div>
 
                         @php
@@ -342,7 +342,7 @@
 
 
     <!-- Footer Start -->
-    <div class="container-fluid bg-dark footer py-5">
+    {{-- <div class="container-fluid bg-dark footer py-5">
         <div class="container py-5">
             <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
                 <div class="row g-4">
@@ -497,7 +497,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Footer End -->
 
 
@@ -506,15 +506,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your
-                            Site
-                            Name</a>, All right reserved.</span>
+                    <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>
+                        Future Light.
+                            </a> All right reserved.</span>
                 </div>
                 <div class="col-md-6 my-auto text-center text-md-end text-white">
-                    <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                    <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
-                    <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    Promoted By 
+                    <span class="text-primary">
+                        Oakkar Nyunt
+                    </span>
                 </div>
             </div>
         </div>
