@@ -100,13 +100,13 @@
                     <div class="me-3">
                         <div class="rounded-circle bg-secondary text-white text-center"
                             style="width: 40px; height: 40px; line-height: 40px;">
-                            {{ strtoupper(substr($comment->user->name, 0, 1)) }}
+                            {{ strtoupper(substr(optional($comment->user)->name ?? '?', 0, 1)) }}
                         </div>
                     </div>
 
                     <div>
                         <strong class="text-dark">
-                            {{ $comment->user->name }}
+                            {{ $comment->user->name ?? 'Unknown User' }}
                             @if ($comment->user_id == $article->user_id)
                                 <small class="text-primary">(Author)</small>
                             @endif
@@ -120,7 +120,7 @@
                     <!-- Edit Button -->
                     @auth
                         @if ($comment->user_id == auth()->id())
-                            <button type="button" class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-sm btn-outline-warning mx-2" data-bs-toggle="modal"
                                 data-bs-target="#editCommentModal{{ $comment->id }}">
                                 <i class="fa fa-pen"></i>
                             </button>

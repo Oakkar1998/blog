@@ -1,24 +1,23 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\Notification;
+use App\Models\Note;
+use App\Models\User;
+use App\Notifications\ArticlePublishedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Notifications\ArticlePublishedNotification;
 
 class CreatorStudioController extends Controller
 {
-    public function creatorStudioPage() 
+    public function creatorStudioPage()
     {
         $creator_id = Auth::user()->id;
-        $creator = User::find($creator_id);
-        
-        return view('Blog.CreatorStudio.BlogManagement.creatorStudioPage',compact('creator'));
+        $creator    = User::find($creator_id);
+
+        return view('Blog.CreatorStudio.BlogManagement.creatorStudioPage', compact('creator'));
     }
 
     public function articlePage()
@@ -34,42 +33,40 @@ class CreatorStudioController extends Controller
     }
 
     public function create(Request $request)
-{
-    $request->validate([
-        'title' => 'required|min:2|max:100|unique:articles,title',
-        'author' => 'required|min:1|max:30',
-        'category_id' => 'required',
-        'content' => 'required|max:10000',
-        'image' => 'nullable|file|max:2048|mimes:jpg,jpeg,webp',
-    ]);
+    {
+        $request->validate([
+            'title'       => 'required|min:2|max:100|unique:articles,title',
+            'author'      => 'required|min:1|max:30',
+            'category_id' => 'required',
+            'content'     => 'required|max:10000',
+            'image'       => 'nullable|file|max:2048|mimes:jpg,jpeg,webp',
+        ]);
 
-    $data = $request->only(['title', 'author', 'content', 'category_id']);
+        $data = $request->only(['title', 'author', 'content', 'category_id']);
 
-    if ($request->hasFile('image')) {
-        $data['image'] = $request->file('image')->store('images', 'public');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images', 'public');
+        }
+        $data['user_id'] = Auth::id();
+
+        // ✅ Create and store the article in a variable
+        $article = Article::create($data);
+
+        // ✅ Notify all readers
+        $readers = User::where('role', 'reader')->get();
+        $actor   = auth()->user();
+        foreach ($readers as $reader) {
+
+            $reader->notify(new ArticlePublishedNotification($article, 'published', $actor));
+
+        }
+
+        return to_route('creator.articlePage');
     }
-    $data['user_id'] = Auth::id();
-
-    // ✅ Create and store the article in a variable
-    $article = Article::create($data);
-
-    // ✅ Notify all readers
-    $readers = User::where('role', 'reader')->get();
-    $actor = auth()->user();
-    foreach ($readers as $reader) {
-
-         $reader->notify(new ArticlePublishedNotification($article, 'published',$actor));
-         
-        
-    }
-
-    return to_route('creator.articlePage');
-}
-
 
     public function editArticlePage($id)
     {
-        $article = Article::find($id);
+        $article  = Article::find($id);
         $get_Cate = Category::select('name', 'id')->get();
         return view('Blog.CreatorStudio.BlogManagement.editArticlePage', compact('article', 'get_Cate'));
     }
@@ -78,21 +75,21 @@ class CreatorStudioController extends Controller
     {
         // Validate input
         $validated = $request->validate([
-            'title' => 'required|min:2|max:100',
-            'author' => 'required|min:1|max:30',
+            'title'       => 'required|min:2|max:100',
+            'author'      => 'required|min:1|max:30',
             'category_id' => 'required|exists:categories,id',
-            'content' => 'required|max:10000',
-            'image' => 'nullable|file|max:2048|mimes:jpg,jpeg,webp',
+            'content'     => 'required|max:10000',
+            'image'       => 'nullable|file|max:2048|mimes:jpg,jpeg,webp',
         ]);
 
         // Find the article
         $article = Article::findOrFail($id);
 
         // Update article fields
-        $article->title = $validated['title'];
-        $article->author = $validated['author'];
+        $article->title       = $validated['title'];
+        $article->author      = $validated['author'];
         $article->category_id = $validated['category_id'];
-        $article->content = $validated['content'];
+        $article->content     = $validated['content'];
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -102,7 +99,7 @@ class CreatorStudioController extends Controller
             }
 
             // Store new image
-            $imagePath = $request->file('image')->store('images', 'public');
+            $imagePath      = $request->file('image')->store('images', 'public');
             $article->image = $imagePath;
         }
 
@@ -125,7 +122,6 @@ class CreatorStudioController extends Controller
         $categories = Category::latest()->paginate(5); // same as orderBy('created_at', 'desc')
         return view('Blog.CreatorStudio.BlogManagement.categoryPage', compact('categories'));
     }
-
 
     public function createCategory(Request $request)
     {
@@ -181,7 +177,7 @@ class CreatorStudioController extends Controller
             }
 
             // Store new image
-            $path = $request->file('image')->store('ProfileImage', 'public');
+            $path        = $request->file('image')->store('ProfileImage', 'public');
             $user->image = $path;
         }
 
@@ -191,18 +187,19 @@ class CreatorStudioController extends Controller
     }
 
     //all users page
-    public function allusersPage(){
+    public function allusersPage()
+    {
 
-        $all_users = User::where('role','reader')->paginate(10);
-        return view('Blog.CreatorStudio.UserManagement.allUsersPage',compact('all_users'));
+        $all_users = User::where('role', 'reader')->latest()->paginate(10);
+        return view('Blog.CreatorStudio.UserManagement.allUsersPage', compact('all_users'));
     }
 
     //deleteUser
-        public function deleteUser(Request $request, $id)
+    public function deleteUser(Request $request, $id)
     {
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->back()->with('error', 'User not found.');
         }
 
@@ -214,6 +211,43 @@ class CreatorStudioController extends Controller
         $user->delete();
 
         return redirect()->back()->with('success', 'User deleted successfully.');
+    }
+
+    // Note
+    public function notePage()
+    {
+        $note = Note::first(); // gets the first (and only) note row
+        return view('Blog.CreatorStudio.BlogManagement.notePage', compact('note'));
+    }
+
+    public function createNote(Request $request)
+    {
+        $data = $request->validate([
+            'note'  => 'required|min:3|max:100',
+            'image' => 'nullable|file|max:1024|mimes:png,jpg,jpeg,webp', // max 1MB
+        ]);
+
+        $existingNote = Note::first();
+
+        // Handle image upload if present
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('notes', 'public');
+
+            // Delete old image if it exists
+            if ($existingNote && $existingNote->image) {
+                Storage::disk('public')->delete($existingNote->image);
+            }
+
+            $data['image'] = $imagePath; // save image path to DB
+        }
+
+        if ($existingNote) {
+            $existingNote->update($data);
+        } else {
+            Note::create($data);
+        }
+
+        return redirect()->back()->with('success', 'Note saved successfully.');
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Note;
 use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
@@ -62,7 +63,10 @@ class ProfileController extends Controller
     public function profilePage(){
         $currentUser = Auth::user()->id;
         $user = User::find($currentUser);
-        return view('Blog.Profile.profielPage',compact('user'));
+
+        $notes = Note::first();
+
+        return view('Blog.Profile.profielPage',compact('user','notes'));
     }
 
     

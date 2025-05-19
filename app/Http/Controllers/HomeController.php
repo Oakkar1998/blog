@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Note;
 use App\Models\User;
 use App\Models\View;
 use App\Models\Article;
@@ -50,6 +51,8 @@ class HomeController extends Controller
         $categories = Category::all();
         $authors = Article::select('author')->distinct()->orderBy('author')->get();
 
-        return view('welcome',compact('articles','categories','authors'));
+        $notes = Note::first();
+        // dd($notes->toArray());
+        return view('welcome',compact('articles','categories','authors','notes'));
     }  
 }

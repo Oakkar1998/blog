@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Love;
+use App\Models\Note;
 use App\Models\Save;
 use App\Models\User;
 use App\Models\View;
 use App\Models\Article;
 use App\Models\Comment;
-use App\Models\Category;
 
+use App\Models\Category;
 use App\Models\Download;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -62,9 +63,9 @@ class ArticleController extends Controller
 
         }
         
-        
+        $notes = Note::first();
 
-        return view('Blog.Article.readArticle', compact('article'));
+        return view('Blog.Article.readArticle', compact('article','notes'));
     }
 
     public function deleteArticle($articleId)

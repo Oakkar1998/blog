@@ -44,8 +44,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/editCategory/{cateId}', [CreatorStudioController::class, 'editCategory'])->name('creator.editCategory');
         Route::get('allusersPage',[CreatorStudioController::class,'allusersPage'])->name('profile.allusersPage');
         Route::delete('deleteUser/{id}',[CreatorStudioController::class,'deleteUser'])->name('profile.deleteUser');
-
         Route::delete('deleteCategory/{categoryId}',[CreatorStudioController::class,'deleteCategory'])->name('creator.deleteCategory');
+        Route::get('notePage',[CreatorStudioController::class,'notePage'])->name('profile.notePage');
+        Route::post('createNote',[CreatorStudioController::class,'createNote'])->name('creator.createNote');
     });
     
     //Article management

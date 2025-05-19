@@ -132,6 +132,9 @@
                             <li>
                                 <a href="{{ route('creator.categoryPage') }}">Categories</a>
                             </li>
+                            <li>
+                                <a href="{{ route('profile.notePage') }}">Note</a>
+                            </li>
 
                         </ul>
                     </li>

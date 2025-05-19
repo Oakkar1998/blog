@@ -112,14 +112,24 @@
                         </div>
                         <div class="overflow-hidden" style="max-width: 735px; width: 100%;">
                             <div id="note" class="ps-2">
-                                <img src="{{ asset('BlogTem/img/features-fashion.jpg') }}"
-                                    class="img-fluid rounded-circle border border-3 border-primary me-2"
-                                    style="width: 30px; height: 30px;" alt="">
+                                @if ($notes && $notes->image)
+                                    <img src="{{ asset('storage/' . $notes->image) }}"
+                                        class="img-fluid rounded-circle border border-3 border-primary me-2"
+                                        style="width: 30px; height: 30px;" alt="Note Image">
+                                @else
+                                    <img src="{{ asset('BlogTem/img/features-fashion.jpg') }}"
+                                        class="img-fluid rounded-circle border border-3 border-primary me-2"
+                                        style="width: 30px; height: 30px;" alt="Default Image">
+                                @endif
+
                                 <a>
                                     {{-- dynamic text! --}}
                                     <p class="text-white mb-0 link-hover">
-                                        မျိုးစေ့ကို မစိုက်ပျိုးဘဲ အသီးအပွင့်ကို မရရှိနိုင်။
-                                        I am come back.
+                                        @if($notes)
+                                            {{ $notes->note }}
+                                        @else
+                                            Everythig is special.
+                                        @endif
                                     </p>
                                 </a>
                             </div>
@@ -512,7 +522,7 @@
     <!-- Copyright End -->
 
 
-    
+
 
     <!-- JavaScript Libraries -->
 
@@ -531,6 +541,7 @@
 
 
     <script>
+        //Date show 
         function updateDateTime() {
             const options = {
                 weekday: 'long',
